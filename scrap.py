@@ -5,14 +5,12 @@ import io
 from PIL import Image
 import base64
 from selenium import webdriver
-
-wd = webdriver.Chrome()
+import sys
 
 def scroll(wd):
     wd.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
-def get_images(wd, delay, size):
-    url = "https://www.google.com/search?q=Queen+chess&sca_esv=a931ccad8231bca2&source=hp&biw=1397&bih=663&ei=jxPiZ5_3HPaJkdUPjdzd4Ak&iflsig=ACkRmUkAAAAAZ-Ihn2Pi_5CMUGgb80ELiou8lN2rmfrV&ved=0ahUKEwjf-t-3lqSMAxX2RKQEHQ1uF5wQ4dUDCBc&uact=5&oq=Queen+chess&gs_lp=EgNpbWciC1F1ZWVuIGNoZXNzMgUQABiABDIFEAAYgAQyBRAAGIAEMgQQABgeMgQQABgeMgQQABgeMgQQABgeMgQQABgeMgQQABgeMgQQABgeSIYdULsGWMobcAR4AJABAJgBJ6AB5gOqAQIxNLgBA8gBAPgBAYoCC2d3cy13aXotaW1nmAIQoAKlBKgCAMICDhAAGIAEGLEDGIMBGIoFwgILEAAYgAQYsQMYgwHCAggQABiABBixA5gDAZIHAjE2oAfoRLIHAjE0uAeeBA&sclient=img&udm=2"
+def get_images(wd, delay, size, url):
     wd.get(url)
     wd.find_elements(webdriver.common.by.By.CLASS_NAME, "QS5gu")[2].click()
     time.sleep(2)
@@ -47,7 +45,6 @@ def get_images(wd, delay, size):
                 image_urls_set.add(src)
             except:
                 continue
-    
     return image_urls_set
 
 
@@ -77,9 +74,25 @@ def convert_url_to_image(url, path, filename):
     except Exception as e:
         print("Error :", e)
 
-url_images = get_images(wd, 2, 1000)
+def main():
+    if len(sys.argv) != 5:
+        print("Error : you should put 3 arguments!")
+        print("arg1: url.")
+        print("arg2: path to the folder you want to save your pictures.")
+        print("arg3: start name of your pictures (for example : car, your files will be car1.jpg, car2.jpg,..)")
+        print("arg4: the maximum of pictures you want.")
+        return
 
-i = 0
-for x in url_images:
-    convert_url_to_image(x, './Queen', 'queen' + str(i))
-    i = i + 1
+    wd = webdriver.Chrome()
+    url = sys.argv[1]
+    path = sys.argv[2]
+    filename = sys.argv[3]
+    max_size = int(sys.argv[4])
+    url_images = get_images(wd, 2, max_size, url)
+    wd.close()
+    i = 0
+    for x in url_images:
+        convert_url_to_image(x, path, filename + str(i))
+        i = i + 1
+
+main()
