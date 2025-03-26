@@ -8,7 +8,7 @@
 
 # Example :
 Scraping car picutres (wanting to have maximum 40 images).
-You may note that I had less than 40 images.
+You may remark that I had less than 40 images.
 
 https://github.com/user-attachments/assets/05005ea0-8685-498e-a655-2c955bc064c9
 
